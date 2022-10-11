@@ -1,0 +1,164 @@
+import csv
+
+
+def esc(code):
+    return f'\u001b[{code}m'
+
+
+def flag_shv():
+    for i in range(2):
+        print(RED + '                         '  + END)
+
+    for i in range(2):
+        print(RED + '          ' + WHITE + '     ' + RED + '          ' + END)
+
+    for i in range(2):
+        print(RED + '     ' + WHITE + '               ' + RED + '     ' + END)
+
+    for i in range(2):
+        print(RED + '          ' + WHITE + '     ' + RED + '          ' + END)
+
+    for i in range(2):
+        print(RED + '                         '  + END)
+
+
+def array_init(array_in, st):
+    for i in range(10):
+        for j in range(10):
+            if j == 0:
+                array_in[i][j] = round(st * (8 - i) + st, 1)
+            if i == 9:
+                array_in[i][j] = round(j, 1)
+    return array_in
+
+
+def array_fill(array_fi, res, st):
+    for i in range(9):
+        for k in range(10):
+            if abs(array_fi[i][0] - res[9 - k]) < st:
+                for j in range(9):
+                    if 8 - j == k:
+                        array_fi[i][j + 1] = 1
+    return array_fi
+
+
+def print_plot(plot):
+    for i in range(9):
+        line = ''
+        for j in range(10):
+            if j == 0:
+                line += WHITE + str(plot[i][j])
+            if plot[i][j] == 0:
+                line += '  '
+            elif plot[i][j] == 1:
+                line += RED + '  ' + WHITE
+        line += END
+        print(line)
+    print(WHITE + '0   1 2 3 4 5 6 7 8 9' + END)
+
+
+RED = esc(41)
+BLUE = esc(44)
+WHITE = esc(107)
+END = esc(0)
+BLACK = esc(40)
+
+array_plot = [[0 for col in range(10)] for row in range(10)]
+result = [0 for i in range(10)]
+
+flag_shv()
+
+for i in range(10):
+    result[i] = i / 3
+#print(result)
+print()
+step = round(abs((result[9] - result[0])) / 9, 1)
+
+array_init(array_plot, step)
+array_fill(array_plot, result, step)
+print_plot(array_plot)
+
+#for i in range(10):
+    #print(array_plot[i])
+print('')
+
+
+def krug():
+    for i in range(2):
+        print('          ' + WHITE + '                         ' + END + ' '*20 + WHITE + '                         ' + END)
+    for i in range(2):
+        print('     ' + WHITE + '          ' + END + '               ' + WHITE + '          ' + END + ' '*10 + WHITE + '          ' + END + '               ' + WHITE + '          ' + END)
+    for i in range(2):
+        print(WHITE + '          ' + END + '                         ' + WHITE + '          ' + END + WHITE + '          ' + END + '                         ' + WHITE + '          ' + END)
+    for i in range(2):
+        print(WHITE + '     ' + END + '                                   ' + WHITE + '     ' + END + WHITE + '     ' + END + '                                   ' + WHITE + '     ' + END)
+    for i in range(2):
+        print(WHITE + '     ' + END + '                                   ' + WHITE + '     ' + END + WHITE + '     ' + END + '                                   ' + WHITE + '     ' + END)
+    for i in range(2):
+        print(WHITE + '          ' + END + '                         ' + WHITE + '          ' + END + WHITE + '          ' + END + '                         ' + WHITE + '          ' + END)
+    for i in range(2):
+        print('     ' + WHITE + '          ' + END + '               ' + WHITE + '          ' + END + '     '*2 + WHITE + '          ' + END + '               ' + WHITE + '          ' + END)
+    for i in range(2):
+        print('          ' + WHITE + '                         ' + END + '          '*2 + WHITE + '                         ' + END)
+
+krug()
+
+erryone = 0
+count = -1
+age = 0
+
+with open('books.csv', 'r', encoding='cp1251') as csvfile:
+    table = csv.reader(csvfile, delimiter=';')
+    for row in table:
+        count += 1
+        if count > 0:
+            if int(row[5]) == 16:
+                age += 1
+            else:
+                erryone +=1
+
+check = '1234'
+pers_er = erryone / count * 100
+pers_ag = age / count * 100
+
+if str(pers_ag)[-1] in check:
+    pers_ag = (pers_ag // 10) * 10
+    pers_er = (pers_er // 10) * 10
+
+def diagr(ag, er):
+    if ag > er:
+        maxz = ag
+        minz = er
+        flag = 0
+    else:
+        maxz = ag
+        minz = er
+        flag = 1
+    for i in range(100, 0, -10):
+        if i != 100:
+            if maxz == i and minz == i:
+                print(' ' + str(i) + BLACK + ' ' + WHITE + '   ' + RED + '   ' + WHITE + '   ' + BLUE + '   ' + WHITE + '   ' + END)
+                maxz -= 10
+                minz -= 10
+            elif maxz == i:
+                print(' ' + str(i) + BLACK + ' ' + WHITE + '   ' * 3 + BLUE + '   ' + WHITE + '   ' + END)
+                maxz -= 10
+            else:
+                print(' ' + str(i) + BLACK + ' ' + WHITE + '   ' * 5 + END)
+        else:
+            if maxz == i and minz == i:
+                print(
+                    str(i) + BLACK + ' ' + WHITE + '   ' + RED + '   ' + WHITE + '   ' + BLUE + '   ' + WHITE + '   ' + END)
+                maxz -= 10
+                minz -= 10
+            elif maxz == i:
+                print(str(i) + BLACK + ' ' + WHITE + '   ' * 3 + BLUE + '   ' + WHITE + '   ' + END)
+                maxz -= 10
+            else:
+                print(str(i) + BLACK + ' ' + WHITE + '   ' * 5 + END)
+    if flag == 0:
+        print('       16   Другие   ')
+    else:
+        print('      Другие    16   ')
+print('')
+diagr(pers_ag, pers_er)
